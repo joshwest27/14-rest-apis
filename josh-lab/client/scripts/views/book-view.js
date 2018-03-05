@@ -82,14 +82,17 @@ var app = app || {};
   };
 
 // COMMENT: What is the purpose of this method?
+// Its purpose is to provide the user with a form to fill out book info
   bookView.initSearchFormPage = function() {
     resetView();
     $('.search-view').show();
     $('#search-form').on('submit', function(event) {
       // COMMENT: What default behavior is being prevented here?
+      // page load
       event.preventDefault();
 
       // COMMENT: What is the event.target, below? What will happen if the user does not provide the information needed for the title, author, or isbn properties?
+      // we want the user to enter at least one value. they dont need to enter all 3
       let book = {
         title: event.target.title.value || '',
         author: event.target.author.value || '',
@@ -99,6 +102,7 @@ var app = app || {};
       module.Book.find(book, bookView.initSearchResultsPage);
 
       // COMMENT: Why are these values set to an empty string?
+      // we want the user to enter the info
       event.target.title.value = '';
       event.target.author.value = '';
       event.target.isbn.value = '';
@@ -106,23 +110,29 @@ var app = app || {};
   }
 
   // COMMENT: What is the purpose of this method?
+  // it initiates the results page.
   bookView.initSearchResultsPage = function() {
     resetView();
     $('.search-results').show();
     $('#search-list').empty();
 
     // COMMENT: Explain how the .map() method is being used below.
+    //I believe it is appending all the books to the search list container.
     module.Book.all.map(book => $('#search-list').append(book.toHtml()));
     $('.detail-button a').text('Add to list').attr('href', '/');
     $('.detail-button').on('click', function(e) {
       // COMMENT: Explain the following line of code.
+      //i believe this is searching for a specific book based on the id that is entered. 
       module.Book.findOne($(this).parent().parent().parent().data('bookid'))
     });
   }
 
   // COMMENT: Explain the following line of code. 
+  //bookView is the empty object and we us module to shuffle through the code without disrupting
+  //the system as a whole.
   module.bookView = bookView;
   
   // COMMENT: Explain the following line of code. 
+  // this is part of the IIFE which allows us to invoke on page load.
 })(app)
 
